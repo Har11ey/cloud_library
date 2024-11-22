@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书借阅系统</title>
+    <style>
+        /* 样式保持不变 */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1em 2em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 3em auto;
+            padding: 2em;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 1em;
+            color: #4CAF50;
+        }
+
+        .form-group {
+            margin-bottom: 1.5em;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5em;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8em;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .form-button {
+            text-align: center;
+        }
+
+        .form-button button {
+            padding: 0.8em 1.5em;
+            font-size: 1em;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .form-button button:hover {
+            background-color: #45a049;
+        }
+
+        .footer {
+            margin-top: 2em;
+            text-align: center;
+            color: #777;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 顶部导航栏 -->
+<div class="navbar">
+    <h1>图书借阅系统</h1>
+    <div>
+        <a href="#">首页</a>
+        <a href="#">新书推荐</a>
+        <a href="#">借阅记录</a>
+    </div>
+</div>
+
+<!-- 登录表单 -->
+<div class="container">
+    <h2>用户登录</h2>
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="username">用户名</label>
+            <input type="text" id="username" name="username" required placeholder="请输入用户名">
+        </div>
+        <div class="form-group">
+            <label for="password">密码</label>
+            <input type="password" id="password" name="password" required placeholder="请输入密码">
+        </div>
+        <div class="form-button">
+            <button type="submit">登录</button>
+        </div>
+    </form>
+
+    <h2>用户注册</h2>
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="newUsername">用户名</label>
+            <input type="text" id="newUsername" name="newUsername" required placeholder="请输入用户名">
+        </div>
+        <div class="form-group">
+            <label for="newPassword">密码</label>
+            <input type="password" id="newPassword" name="newPassword" required placeholder="请输入密码">
+        </div>
+        <div class="form-group">
+            <label for="email">电子邮件</label>
+            <input type="email" id="email" name="email" required placeholder="请输入电子邮件">
+        </div>
+        <div class="form-button">
+            <button type="submit">注册</button>
+        </div>
+    </form>
+
+    <div class="footer">
+        <p>© 2024 图书借阅系统. 网安22A2何昊.</p>
+    </div>
+</div>
+
+<!-- JS 脚本 -->
+<script>
+    // 登录表单提交事件
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // 模拟与后端联动（实际应使用 AJAX 发送到后端处理）
+        console.log(`用户名: ${username}, 密码: ${password}`);
+
+        alert('登录请求已发送！');
+    });
+
+    // 注册表单提交事件
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const newUsername = document.getElementById('newUsername').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const email = document.getElementById('email').value;
+
+        // 模拟与后端联动（实际应使用 AJAX 发送到后端处理）
+        console.log(`注册用户名: ${newUsername}, 密码: ${newPassword}, 邮箱: ${email}`);
+
+        // 在此处可以发送注册请求到后端
+        alert('注册请求已发送！');
+    });
+</script>
+</body>
+</html>
