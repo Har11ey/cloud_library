@@ -100,7 +100,7 @@
 </div>
 
 <script>
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
         const username = document.getElementById('username').value;
@@ -111,15 +111,16 @@
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: new URLSearchParams({ name: username, password: password })
+            body: new URLSearchParams({name: username, password: password})
         })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(data => {
-                if (data === '登录成功') {
-                    alert('登录成功');
-                    window.location.href = '/admin'; // 跳转到后台页面
+                if (data.status === 'success') {
+                    alert(data.message); // 显示 "登录成功"
+                    localStorage.setItem('username', data.username); // 保存用户名
+                    window.location.href = '/dashboard.html'; // 跳转到后台页面
                 } else {
-                    alert('用户名或密码错误');
+                    alert(data.message); // 显示 "用户名或密码错误"
                 }
             })
             .catch(error => console.error('请求失败', error));
