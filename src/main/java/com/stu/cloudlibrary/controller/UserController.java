@@ -1,5 +1,6 @@
 package com.stu.cloudlibrary.controller;
 
+import com.stu.cloudlibrary.vo.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.stu.cloudlibrary.model.User;
@@ -21,33 +22,32 @@ public class UserController {
 
     // 用户登录接口
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestParam String name, @RequestParam String password) {
+    public ApiResponse<String> login(@RequestParam String name, @RequestParam String password) {
         logger.info("用户尝试登录，name: {}, password: {}", name, password);
 
-        Map<String, Object> response = new HashMap<>();
         boolean success = userService.login(name, password);
 
         if (success) {
-            response.put("status", "success");
-            response.put("message", "登录成功");
-            response.put("username", name); // 返回用户名，供前端显示
+            return ApiResponse.success("登录成功");
         } else {
-            response.put("status", "fail");
-            response.put("message", "用户名或密码错误");
+            return ApiResponse.failed("用户名或密码错误！");
         }
-
-        return response;
     }
 
     // 用户注册接口
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
+    public ApiResponse<String> register(@RequestBody User user) {
+        logger.info("用户尝试注册，用户信息: {}", user);
+
         boolean success = userService.register(user);
+
         if (success) {
-            return "注册成功";
+            return ApiResponse.success("注册成功");
+        } else {
+            return ApiResponse.failed("注册失败");
         }
-        return "注册失败";
     }
+
 
     // 注销接口
     @PostMapping("/logout")
