@@ -14,6 +14,14 @@ public class ApiResponse<T> {
     private T data;
 
 
+    public static <T> ApiResponse<T> success(T data, String message){
+        ApiResponse<T> response = new ApiResponse<>();
+        response.code = CODE_SUCCESS;
+        response.status = "success";
+        response.message = message;
+        response.data = data;
+        return response;
+    }
     public static <T> ApiResponse<T> success(T data){
         ApiResponse<T> response = new ApiResponse<>();
         response.code = CODE_SUCCESS;
@@ -21,7 +29,6 @@ public class ApiResponse<T> {
         response.data = data;
         return response;
     }
-
     public static <T> ApiResponse<T> failed(String message){
         ApiResponse<T> response = new ApiResponse<>();
         response.code = CODE_FAILED;

@@ -117,7 +117,7 @@
             .then(data => {
                 if (data.status === 'success') {
                     alert(data.message); // 显示 "登录成功"
-                    localStorage.setItem('username', data.username); // 保存用户名
+                    localStorage.setItem('username', data.data.username); // 保存用户名
                     window.location.href = '/dashboard.html'; // 跳转到后台页面
                 } else {
                     alert(data.message); // 显示 "用户名或密码错误"

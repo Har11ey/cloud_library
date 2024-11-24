@@ -22,13 +22,19 @@ public class UserController {
 
     // 用户登录接口
     @PostMapping("/login")
-    public ApiResponse<String> login(@RequestParam String name, @RequestParam String password) {
+    public ApiResponse<Map<String, String>> login(@RequestParam String name, @RequestParam String password) {
         logger.info("用户尝试登录，name: {}, password: {}", name, password);
 
         boolean success = userService.login(name, password);
 
         if (success) {
-            return ApiResponse.success("登录成功");
+            Map<String, String> data = new HashMap<>();
+            data.put("username", name);
+
+            ApiResponse<Map<String, String>> response = ApiResponse.success(data, "登录成功");
+            logger.info("登录成功，返回数据: {}", response); // 打印返回数据;
+            return response;
+
         } else {
             return ApiResponse.failed("用户名或密码错误！");
         }
