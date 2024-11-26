@@ -5,97 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>后台管理 - 图书借阅系统</title>
     <style>
+        /* 页面基本样式 */
         body {
-            margin: 0;
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            color: #333;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
         }
 
+        /* 导航栏样式 */
         .navbar {
             background-color: #4CAF50;
             color: white;
+            padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1em 2em;
         }
 
         .navbar .title {
             font-size: 1.5em;
-            font-weight: bold;
         }
 
         .navbar .user-info {
             display: flex;
             align-items: center;
-            gap: 1em;
         }
 
         .navbar .user-info span {
-            font-size: 1em;
+            margin-right: 10px;
         }
 
         .navbar .user-info button {
-            padding: 0.5em 1em;
-            font-size: 1em;
-            color: #4CAF50;
-            background-color: white;
+            padding: 5px 10px;
+            background-color: #f44336;
+            color: white;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
         }
 
         .navbar .user-info button:hover {
-            background-color: #f5f5f5;
+            background-color: #d32f2f;
         }
 
+        /* 主体内容布局 */
         .dashboard {
             display: flex;
-            height: calc(100vh - 70px);
+            min-height: 100vh;
         }
 
+        /* 侧边栏样式 */
         .sidebar {
-            background-color: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            padding: 1em;
-            width: 250px;
+            width: 200px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
         }
 
         .sidebar ul {
-            list-style: none;
+            list-style-type: none;
             padding: 0;
         }
 
         .sidebar ul li {
-            margin-bottom: 1em;
+            margin-bottom: 15px;
         }
 
         .sidebar ul li a {
+            color: white;
             text-decoration: none;
-            color: #4CAF50;
-            font-size: 1em;
+            font-size: 1.1em;
             display: block;
-            padding: 0.8em 1em;
+            padding: 10px;
             border-radius: 5px;
-            background-color: #f5f5f5;
         }
 
         .sidebar ul li a:hover {
-            background-color: #e0e0e0;
+            background-color: #34495e;
         }
 
+        /* 主内容区 */
         .content {
             flex-grow: 1;
-            padding: 2em;
+            padding: 20px;
+            background-color: #ecf0f1;
         }
 
-        .content h1 {
-            color: #4CAF50;
+        .book-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        .book-item h3 {
+            margin: 0;
+        }
+
+        .book-item p {
+            margin: 5px 0;
+        }
+
+        .borrow-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .borrow-button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
+
+<!-- 导航栏 -->
 <div class="navbar">
     <div class="title">何昊的图书借阅系统</div>
     <div class="user-info">
@@ -104,16 +132,20 @@
     </div>
 </div>
 
+<!-- 主体内容 -->
 <div class="dashboard">
+    <!-- 侧边栏 -->
     <div class="sidebar">
         <ul>
-            <li><a href="recommendations.html">新书推荐</a></li>
+            <li><a href="javascript:void(0)" id="newBooksLink">新书推荐</a></li>
             <li><a href="borrow.html">图书借阅</a></li>
             <li><a href="current.html">当前借阅</a></li>
             <li><a href="records.html">借阅记录</a></li>
         </ul>
     </div>
-    <div class="content">
+
+    <!-- 主内容区 -->
+    <div class="content" id="dashboardContent">
         <h1>欢迎来到图书借阅系统</h1>
         <p>请选择左侧模块以进行操作。</p>
     </div>
@@ -131,15 +163,66 @@
 
     // 注销逻辑
     document.getElementById('logoutButton').addEventListener('click', () => {
-        fetch('/users/logout', {
-            method: 'POST'
-        })
+        fetch('/users/logout', { method: 'POST' })
             .then(() => {
                 localStorage.removeItem('username'); // 清除用户名
                 window.location.href = 'login.html'; // 跳转到登录页面
             })
             .catch(error => console.error('注销失败', error));
     });
+
+    // 动态加载新书推荐模块
+    document.getElementById('newBooksLink').addEventListener('click', () => {
+        fetch('/books/latest')  // 假设这是获取新书推荐列表的API
+            .then(response => response.json())
+            .then(data => {
+                displayRecommendedBooks(data);
+            })
+            .catch(error => console.error('获取新书推荐失败', error));
+    });
+
+    function displayRecommendedBooks(books) {
+        const contentDiv = document.getElementById('dashboardContent');
+        contentDiv.innerHTML = "<h1>新书推荐</h1><div class='book-list'></div>";
+
+        const bookListDiv = contentDiv.querySelector('.book-list');
+        books.forEach(book => {
+            const bookItem = document.createElement('div');
+            bookItem.classList.add('book-item');
+
+            bookItem.innerHTML = `
+                <h3>${book.name}</h3>
+                <p>作者：${book.author}</p>
+                <p>出版社：${book.press}</p>
+                <p>价格：${book.price} 元</p>
+                <button class="borrow-button" data-book-id="${book.id}">借阅</button>
+            `;
+
+            bookItem.querySelector('.borrow-button').addEventListener('click', function() {
+                borrowBook(book.id);
+            });
+
+            bookListDiv.appendChild(bookItem);
+        });
+    }
+
+    // 借阅图书
+    function borrowBook(bookId) {
+        fetch(`/books/borrow/${bookId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: username }) // 将用户名作为借阅请求的参数
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('借阅成功');
+                } else {
+                    alert('借阅失败');
+                }
+            })
+            .catch(error => console.error('借阅请求失败', error));
+    }
 </script>
 
 </body>
