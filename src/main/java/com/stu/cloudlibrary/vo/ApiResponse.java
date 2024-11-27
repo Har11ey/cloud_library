@@ -1,39 +1,48 @@
 package com.stu.cloudlibrary.vo;
 
-import lombok.Data;
-
-@Data
 public class ApiResponse<T> {
 
-    public  static final int CODE_SUCCESS = 200;
-    public  static final int CODE_FAILED = -1;
-
     private int code;
-    private String status;
     private String message;
     private T data;
 
+    public static <T> ApiResponse<T> success(T data) {
+        ApiResponse<T> response = new ApiResponse<>();
+        response.setCode(200);
+        response.setMessage("success");
+        response.setData(data);
+        return response;
+    }
 
-    public static <T> ApiResponse<T> success(T data, String message){
+    public static <T> ApiResponse<T> failed(String message) {
         ApiResponse<T> response = new ApiResponse<>();
-        response.code = CODE_SUCCESS;
-        response.status = "success";
-        response.message = message;
-        response.data = data;
+        response.setCode(400);
+        response.setMessage(message);
         return response;
     }
-    public static <T> ApiResponse<T> success(T data){
-        ApiResponse<T> response = new ApiResponse<>();
-        response.code = CODE_SUCCESS;
-        response.status = "success";
-        response.data = data;
-        return response;
+
+    // Getter 和 Setter
+    public int getCode() {
+        return code;
     }
-    public static <T> ApiResponse<T> failed(String message){
-        ApiResponse<T> response = new ApiResponse<>();
-        response.code = CODE_FAILED;
-        response.status = "failed";
-        response.message = message;
-        return response;
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
     }
 }

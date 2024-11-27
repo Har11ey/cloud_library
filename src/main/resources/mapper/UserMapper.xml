@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="com.stu.cloudlibrary.mapper.UserMapper">
+
+    <!-- 根据用户名查找用户 -->
+    <select id="findByUsername" resultType="com.stu.cloudlibrary.model.User">
+        SELECT * FROM user WHERE name = #{username}
+    </select>
+
+    <!-- 注册用户 -->
+    <insert id="registerUser">
+        INSERT INTO user (name, password, email, role, status)
+        VALUES (#{name}, #{password}, #{email}, #{role}, #{status})
+    </insert>
+
+    <!-- 更新用户状态 -->
+    <update id="updateUserStatus">
+        UPDATE user
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

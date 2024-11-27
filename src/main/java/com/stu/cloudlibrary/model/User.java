@@ -1,22 +1,13 @@
 package com.stu.cloudlibrary.model;
 
-import jakarta.persistence.*;
 import lombok.Data;
 
-@Entity
-@Data  // Lombok 自动生成 getter, setter, toString 等
+@Data
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true)
-    private String name;
-
-    @Column(nullable = false)
-    private String password;
-
-    private String email;
-    private String role;
-    private char status; // 'A' 激活，'I' 禁用
+    private Long id;        // 用户ID
+    private String name;    // 用户名
+    private String password;// 密码
+    private String email;   // 邮箱
+    private String role;    // 角色
+    private String status;  // 状态（例如：激活、禁用）
 }
