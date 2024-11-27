@@ -18,7 +18,7 @@ public interface BookMapper {
 
     // 还书，更新图书状态
     @Update("UPDATE book SET status = 'available', borrower = NULL, borrowtime = NULL, returntime = NULL WHERE id = #{id} AND status = 'borrowed'")
-    int returnBook(Long id);
+    int returnBook(@Param("id") Long id);
 
     // 根据ID查找图书
     @Select("SELECT * FROM book WHERE id = #{id}")
