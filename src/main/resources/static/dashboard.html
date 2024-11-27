@@ -137,7 +137,7 @@
     <!-- 侧边栏 -->
     <div class="sidebar">
         <ul>
-            <li><a href="javascript:void(0)" id="newBooksLink">新书推荐</a></li>
+            <li><a href="recommendations.html" id="newBooksLink">新书推荐</a></li>
             <li><a href="borrow.html">图书借阅</a></li>
             <li><a href="current.html">当前借阅</a></li>
             <li><a href="records.html">借阅记录</a></li>
@@ -171,58 +171,7 @@
             .catch(error => console.error('注销失败', error));
     });
 
-    // 动态加载新书推荐模块
-    document.getElementById('newBooksLink').addEventListener('click', () => {
-        fetch('/books/latest')  // 假设这是获取新书推荐列表的API
-            .then(response => response.json())
-            .then(data => {
-                displayRecommendedBooks(data);
-            })
-            .catch(error => console.error('获取新书推荐失败', error));
-    });
 
-    function displayRecommendedBooks(books) {
-        const contentDiv = document.getElementById('dashboardContent');
-        contentDiv.innerHTML = "<h1>新书推荐</h1><div class='book-list'></div>";
-
-        const bookListDiv = contentDiv.querySelector('.book-list');
-        books.forEach(book => {
-            const bookItem = document.createElement('div');
-            bookItem.classList.add('book-item');
-
-            bookItem.innerHTML = `
-                <h3>${book.name}</h3>
-                <p>作者：${book.author}</p>
-                <p>出版社：${book.press}</p>
-                <p>价格：${book.price} 元</p>
-                <button class="borrow-button" data-book-id="${book.id}">借阅</button>
-            `;
-
-            bookItem.querySelector('.borrow-button').addEventListener('click', function() {
-                borrowBook(book.id);
-            });
-
-            bookListDiv.appendChild(bookItem);
-        });
-    }
-
-    // 借阅图书
-    function borrowBook(bookId) {
-        fetch(`/books/borrow/${bookId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: username }) // 将用户名作为借阅请求的参数
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('借阅成功');
-                } else {
-                    alert('借阅失败');
-                }
-            })
-            .catch(error => console.error('借阅请求失败', error));
-    }
 </script>
 
 </body>

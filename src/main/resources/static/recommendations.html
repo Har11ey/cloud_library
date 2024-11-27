@@ -83,6 +83,7 @@
         // 显示加载提示
         bookListDiv.innerHTML = '<p>正在加载新书推荐...</p>';
 
+        // 请求后端接口获取最新图书数据
         fetch('/books/latest')
             .then(response => {
                 if (!response.ok) {
@@ -91,10 +92,15 @@
                 return response.json();
             })
             .then(data => {
-                if (data.length === 0) {
-                    bookListDiv.innerHTML = '<p>没有找到推荐的新书。</p>';
+                // 检查返回数据格式是否正确
+                if (data.code === 200 && Array.isArray(data.data)) {
+                    if (data.data.length === 0) {
+                        bookListDiv.innerHTML = '<p>没有找到推荐的新书。</p>';
+                    } else {
+                        displayRecommendedBooks(data.data);
+                    }
                 } else {
-                    displayRecommendedBooks(data);
+                    bookListDiv.innerHTML = '<p>获取新书推荐数据失败。</p>';
                 }
             })
             .catch(error => {
@@ -138,10 +144,9 @@
             return;
         }
 
-        fetch(`/books/borrow/${bookId}`, {
+        fetch(`/books/borrow?bookId=${bookId}&username=${encodeURIComponent(username)}`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: username }) // 将用户名作为借阅请求的参数
+            headers: { 'Content-Type': 'application/json' }
         })
             .then(response => {
                 if (!response.ok) {
@@ -150,10 +155,10 @@
                 return response.json();
             })
             .then(data => {
-                if (data.success) {
-                    alert('借阅成功');
+                if (data.code === 200) {
+                    alert(data.message || '借阅成功');
                 } else {
-                    alert('借阅失败：' + data.message || '未知错误');
+                    alert(data.message || '借阅失败');
                 }
             })
             .catch(error => console.error('借阅请求失败', error));
