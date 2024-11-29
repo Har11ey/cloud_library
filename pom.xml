@@ -60,7 +60,44 @@
         </dependency>
     </dependencies>
 
+
+    <profiles>
+        <profile>
+            <id>dev</id><!-- 测试环境 -->
+            <properties>
+                <package.target>dev</package.target>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <profile>
+            <id>prod</id><!-- 生产环境 -->
+            <properties>
+                <package.target>prod</package.target>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering><!-- 使用package.target值，替换配置文件中 @package.target@ -->
+                <excludes>
+                    <exclude>**/*.xlsx</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.xlsx</include>
+                    <include>**/*.jar</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
