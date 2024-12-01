@@ -31,4 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# 添加忽略 cloud-library-logs 目录
 /cloud-library-logs/
+
