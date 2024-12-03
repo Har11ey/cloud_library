@@ -111,14 +111,14 @@
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: new URLSearchParams({name: username, password: password})
+            body: new URLSearchParams({username: username, password: password})
         })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
                     alert(data.message); // 显示 "登录成功"
                     localStorage.setItem('username', data.data.username); // 保存用户名
-                    window.location.href = '/dashboard.html'; // 跳转到后台页面
+                    window.location.href = '/dashboard.html'; // 跳转到后台页面add
                 } else {
                     alert(data.message); // 显示 "用户名或密码错误"
                 }
