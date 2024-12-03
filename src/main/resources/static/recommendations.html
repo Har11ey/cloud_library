@@ -5,163 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>新书推荐 - 图书借阅系统</title>
     <style>
-        /* 页面基本样式 */
+        /* 样式和布局可以根据需要调整 */
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            padding: 0;
+            background: #f5f5f5;
+            color: #333;
         }
-
-        /* 主体内容布局 */
-        .content {
-            padding: 20px;
-            background-color: #ecf0f1;
-        }
-
-        .book-item {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: white;
+        .container {
+            max-width: 1000px;
+            margin: 5em auto;
+            padding: 2em;
+            background: white;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
+            border-radius: 8px;
         }
-
-        .book-item h3 {
-            margin: 0;
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 1em;
         }
-
-        .book-item p {
-            margin: 5px 0;
+        .book-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1em;
+            border-bottom: 1px solid #ccc;
         }
-
-        .borrow-button {
+        .book-item button {
+            padding: 0.5em 1em;
             background-color: #4CAF50;
             color: white;
-            padding: 8px 16px;
             border: none;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
         }
-
-        .borrow-button:hover {
+        .book-item button:hover {
             background-color: #45a049;
         }
-
-        /* 样式优化 */
-        .book-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .book-list .book-item {
-            flex: 1 1 calc(33% - 20px);
-            box-sizing: border-box;
+        .book-item button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
-
-<!-- 主体内容 -->
-<div class="content" id="newBooksContent">
-    <h1>新书推荐</h1>
-    <div class="book-list" id="bookList">
-        <!-- 新书推荐列表将动态渲染在这里 -->
+<div class="container">
+    <h2>新书推荐</h2>
+    <div id="bookList">
+        <!-- 图书列表将在这里加载 -->
     </div>
 </div>
 
 <script>
-    // 当页面加载完成时，获取新书推荐数据
-    window.onload = function() {
-        const bookListDiv = document.getElementById('bookList');
-        if (!bookListDiv) {
-            console.error('缺少 id 为 "bookList" 的元素');
-            return;
-        }
+    // 获取并显示图书列表
+    fetch('/books/latest')
+        .then(response => response.json())
+        .then(data => {
+            if (data.code === 200) {
+                const books = data.data;
+                const bookListContainer = document.getElementById('bookList');
+                bookListContainer.innerHTML = '';  // 清空容器
 
-        // 显示加载提示
-        bookListDiv.innerHTML = '<p>正在加载新书推荐...</p>';
+                books.forEach(book => {
+                    const bookItem = document.createElement('div');
+                    bookItem.classList.add('book-item');
+                    bookItem.innerHTML = `
+                        <div>
+                            <strong>${book.name}</strong><br>
+                            作者: ${book.author}<br>
+                            价格: ￥${book.price}
+                        </div>
+                        <div>
+                            <button ${book.status === 'available' ? '' : 'disabled'} onclick="borrowBook(${book.id})">借书</button>
+                            <button ${book.status === 'borrowed' ? '' : 'disabled'} onclick="returnBook(${book.id})">还书</button>
+                        </div>
+                    `;
+                    bookListContainer.appendChild(bookItem);
+                });
+            } else {
+                alert("加载图书失败！");
+            }
+        })
+        .catch(error => console.error('请求失败', error));
 
-        // 请求后端接口获取最新图书数据
-        fetch('/books/latest')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('网络响应错误，状态码：' + response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // 检查返回数据格式是否正确
-                if (data.code === 200 && Array.isArray(data.data)) {
-                    if (data.data.length === 0) {
-                        bookListDiv.innerHTML = '<p>没有找到推荐的新书。</p>';
-                    } else {
-                        displayRecommendedBooks(data.data);
-                    }
-                } else {
-                    bookListDiv.innerHTML = '<p>获取新书推荐数据失败。</p>';
-                }
-            })
-            .catch(error => {
-                console.error('获取新书推荐失败', error);
-                bookListDiv.innerHTML = '<p>获取新书推荐数据失败，请稍后再试。</p>';
-            });
-    };
-
-    // 动态展示新书推荐
-    function displayRecommendedBooks(books) {
-        const bookListDiv = document.getElementById('bookList');
-        bookListDiv.innerHTML = ''; // 清空之前的内容
-
-        books.forEach(book => {
-            const bookItem = document.createElement('div');
-            bookItem.classList.add('book-item');
-
-            bookItem.innerHTML = `
-                <h3>${book.name}</h3>
-                <p>作者：${book.author}</p>
-                <p>出版社：${book.press}</p>
-                <p>价格：${book.price} 元</p>
-                <button class="borrow-button" data-book-id="${book.id}">借阅</button>
-            `;
-
-            // 为借阅按钮绑定事件
-            bookItem.querySelector('.borrow-button').addEventListener('click', function() {
-                borrowBook(book.id);
-            });
-
-            bookListDiv.appendChild(bookItem);
-        });
-    }
-
-    // 借阅图书
+    // 借书操作
     function borrowBook(bookId) {
-        const username = localStorage.getItem('username');
+        const username = localStorage.getItem('username');  // 从本地存储中获取用户名
         if (!username) {
             alert('请先登录');
-            window.location.href = 'login.html'; // 跳转到登录页面
             return;
         }
 
-        fetch(`/books/borrow?bookId=${bookId}&username=${encodeURIComponent(username)}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
+        fetch(`/books/borrow?bookId=${bookId}&username=${username}`, {
+            method: 'POST'
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('网络响应错误，状态码：' + response.status);
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.code === 200) {
-                    alert(data.message || '借阅成功');
+                    alert(data.message);  // 显示借书成功信息
+                    location.reload();  // 刷新页面以更新图书列表
                 } else {
-                    alert(data.message || '借阅失败');
+                    alert(data.message);  // 显示错误信息
                 }
             })
-            .catch(error => console.error('借阅请求失败', error));
+            .catch(error => console.error('借书请求失败', error));
+    }
+
+    // 还书操作
+    function returnBook(bookId) {
+        fetch(`/books/return?bookId=${bookId}`, {
+            method: 'POST'
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 200) {
+                    alert(data.message);  // 显示还书成功信息
+                    location.reload();  // 刷新页面以更新图书列表
+                } else {
+                    alert(data.message);  // 显示错误信息
+                }
+            })
+            .catch(error => console.error('还书请求失败', error));
     }
 </script>
 
