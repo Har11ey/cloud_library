@@ -27,7 +27,7 @@ public class BookController {
     public ApiResponse<String> borrowBook(@RequestParam Long bookId, @RequestParam String username) {
         boolean success = bookService.borrowBook(bookId, username);
         if (success) {
-            return ApiResponse.success("借阅成功");
+            return ApiResponse.success(username,"登陆成功");
         } else {
             return ApiResponse.failed("借阅失败，图书不可借");
         }
