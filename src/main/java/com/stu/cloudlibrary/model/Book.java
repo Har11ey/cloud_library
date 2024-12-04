@@ -6,7 +6,7 @@ import lombok.Data;
 public class Book {
     private Long id;            // 图书ID
     private String name;        // 图书名称
-    private String press;       // 出版社
+    private String publisher;   // 出版社
     private String author;      // 作者
     private String pagination;  // 页数
     private Double price;       // 价格

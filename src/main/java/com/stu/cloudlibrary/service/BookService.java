@@ -46,4 +46,22 @@ public class BookService {
     public Book getBookById(Long bookId) {
         return bookMapper.findById(bookId);
     }
+
+    // 查询图书的功能：根据书名、作者、出版社进行查询（支持分页）
+    public List<Book> searchBooks(String name, String author, String publisher, int offset, int pageSize) {
+        // 调用 BookMapper 的查询方法
+        return bookMapper.searchBooks(name, author, publisher, offset, pageSize);
+    }
+
+    // 新增图书
+    public boolean addBook(Book book) {
+        int rows = bookMapper.addBook(book);
+        return rows > 0;
+    }
+
+    // 编辑图书
+    public boolean editBook(Book book) {
+        int rows = bookMapper.updateBook(book);
+        return rows > 0;
+    }
 }

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>图书借阅 - 图书借阅系统</title>
+        <style>
+            /* 样式和布局可以根据需要调整 */
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+                background: #f5f5f5;
+                color: #333;
+            }
+            .container {
+                max-width: 1000px;
+                margin: 5em auto;
+                padding: 2em;
+                background: white;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+            }
+            h2 {
+                text-align: center;
+                color: #4CAF50;
+                margin-bottom: 1em;
+            }
+            .book-item {
+                display: flex;
+                justify-content: space-between;
+                padding: 1em;
+                border-bottom: 1px solid #ccc;
+            }
+            .book-item button {
+                padding: 0.5em 1em;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .book-item button:hover {
+                background-color: #45a049;
+            }
+            .book-item button:disabled {
+                background-color: #ccc;
+                cursor: not-allowed;
+            }
+            /* 侧边栏样式 */
+            .sidebar {
+                width: 200px;
+                background-color: #2c3e50;
+                color: white;
+                padding: 20px;
+            }
+
+            .sidebar ul {
+                list-style-type: none;
+                padding: 0;
+            }
+
+            .sidebar ul li {
+                margin-bottom: 15px;
+            }
+
+            .sidebar ul li a {
+                color: white;
+                text-decoration: none;
+                font-size: 1.1em;
+                display: block;
+                padding: 10px;
+                border-radius: 5px;
+            }
+
+            .sidebar ul li a:hover {
+                background-color: #34495e;
+            }
+            /* 导航栏样式 */
+            /* 确保导航栏和用户名部分对齐 */
+            .navbar {
+                background-color: #4CAF50;
+                color: white;
+                padding: 15px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .navbar .title {
+                font-size: 1.5em;
+            }
+
+            .navbar .user-info {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end; /* 确保用户名和注销按钮靠右显示 */
+            }
+
+            .navbar .user-info span {
+                margin-right: 10px;  /* 添加间距 */
+                white-space: nowrap; /* 禁止换行 */
+            }
+
+            .navbar .user-info button {
+                padding: 5px 10px;
+                background-color: #f44336;
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+
+            .navbar .user-info button:hover {
+                background-color: #d32f2f;
+            }
+
+            /* 主体内容布局 */
+            .borrow {
+                display: flex;
+                min-height: 100vh;
+            }
+            .form-group {
+                margin-bottom: 1em;
+            }
+
+            input[type="text"], input[type="number"], button {
+                width: 100%;
+                padding: 10px;
+                margin: 0.5em 0;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+            /* 给表格容器加个内边距 */
+            #borrowed-books {
+                margin: 20px;
+                padding: 10px;
+                border-radius: 8px;
+                background-color: #f9f9f9;
+            }
+
+            /* 设置表格宽度、边框和背景 */
+            table {
+                width: 100%;
+                border-collapse: collapse;  /* 合并单元格边框 */
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  /* 阴影效果 */
+            }
+
+            /* 设置表头样式 */
+            th {
+                background-color: #4CAF50;  /* 表头背景色 */
+                color: white;
+                text-align: left;
+                padding: 12px 15px;  /* 内边距 */
+                font-weight: bold;
+            }
+
+            /* 设置表格单元格样式 */
+            td {
+                padding: 10px 15px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;  /* 单元格底部边框 */
+            }
+
+            /* 设置行的背景颜色 */
+            tr:nth-child(even) {
+                background-color: #f2f2f2;  /* 偶数行背景色 */
+            }
+
+            /* 设置行鼠标悬停时的背景色 */
+            tr:hover {
+                background-color: #f1f1f1;
+                cursor: pointer;
+            }
+
+            /* 操作按钮样式 */
+            button {
+                padding: 6px 12px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            /* 鼠标悬停时改变按钮背景色 */
+            button:hover {
+                background-color: #0056b3;
+            }
+
+            /* 设置表格的字体样式 */
+            table, th, td {
+                font-family: Arial, sans-serif;
+            }
+
+            /* 设置表格字体大小 */
+            th, td {
+                font-size: 14px;
+            }
+
+            /* 添加表格外部间距 */
+            table {
+                margin-top: 20px;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- 导航栏 -->
+        <div class="navbar">
+            <div class="title">何昊的图书借阅系统</div>
+            <div class="user-info">
+                <span id="usernameDisplay">用户名：未知</span>
+                <button id="logoutButton">注销</button>
+            </div>
+        </div>
+        <!--主体部分-->
+        <div class="borrow">
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <ul>
+                    <li><a href="recommendations.html" id="newBooksLink">新书推荐</a></li>
+                    <li><a href="borrow.html">图书借阅</a></li>
+                    <li><a href="current.html">当前借阅</a></li>
+                    <li><a href="records.html">借阅记录</a></li>
+                </ul>
+            </div>
+
+            <!-- 借阅图书功能 -->
+            <div class="container">
+                <h2>借阅图书</h2>
+                <h3>查询到的图书</h3>
+                <div id="borrowed-books">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>书名</th>
+                            <th>借阅人</th>
+                            <th>借阅时间</th>
+                            <th>预计归还时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- 这里动态加载借阅记录 -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- 查询图书表单 -->
+                <div class="form-group">
+                    <h3>查询图书</h3>
+                    <label for="searchName">图书名称：</label>
+                    <input type="text" id="searchName" name="searchName" placeholder="请输入图书名称">
+                    <label for="searchAuthor">作者：</label>
+                    <input type="text" id="searchAuthor" name="searchAuthor" placeholder="请输入作者">
+                    <label for="searchPublisher">出版社：</label>
+                    <input type="text" id="searchPublisher" name="searchPublisher" placeholder="请输入出版社">
+                    <button id="searchButton">查询图书</button>
+                </div>
+
+                <!-- 新增图书表单 -->
+                <div class="form-group">
+                    <h3>新增图书</h3>
+                    <label for="bookName">图书名称：</label>
+                    <input type="text" id="bookName" name="bookName" placeholder="请输入图书名称">
+                    <label for="bookAuthor">作者：</label>
+                    <input type="text" id="bookAuthor" name="bookAuthor" placeholder="请输入作者">
+                    <label for="bookPublisher">出版社：</label>
+                    <input type="text" id="bookPublisher" name="bookPublisher" placeholder="请输入出版社">
+                    <label for="bookPrice">价格：</label>
+                    <input type="number" id="bookPrice" name="bookPrice" placeholder="请输入价格">
+                    <button id="addBookButton">新增图书</button>
+                </div>
+
+                <!-- 编辑图书表单 -->
+                <div class="form-group">
+                    <h3>编辑图书</h3>
+                    <label for="editBookId">图书ID：</label>
+                    <input type="number" id="editBookId" name="editBookId" placeholder="请输入图书ID" required>
+                    <label for="editBookName">图书名称：</label>
+                    <input type="text" id="editBookName" name="editBookName" placeholder="请输入新图书名称">
+                    <label for="editBookAuthor">作者：</label>
+                    <input type="text" id="editBookAuthor" name="editBookAuthor" placeholder="请输入新作者">
+                    <label for="editBookPublisher">出版社：</label>
+                    <input type="text" id="editBookPublisher" name="editBookPublisher" placeholder="请输入新出版社">
+                    <label for="editBookPrice">价格：</label>
+                    <input type="number" id="editBookPrice" name="editBookPrice" placeholder="请输入新价格">
+                    <button id="editBookButton">编辑图书</button>
+                </div>
+
+            </div>
+        </div>
+        <script>
+            // 查询图书
+            document.getElementById('searchButton').addEventListener('click', function () {
+                const name = document.getElementById('searchName').value;
+                const author = document.getElementById('searchAuthor').value;
+                const publisher = document.getElementById('searchPublisher').value;
+                let queryParams = [];
+
+                if (name) {
+                    queryParams.push(`name=${encodeURIComponent(name)}`);
+                }
+
+                if (author) {
+                    queryParams.push(`author=${encodeURIComponent(author)}`);
+                }
+
+                if (publisher) {
+                    queryParams.push(`publisher=${encodeURIComponent(publisher)}`);
+                }
+
+                // 若没有传递任何参数，设置默认的分页参数
+                const queryString = queryParams.length > 0
+                    ? queryParams.join('&') + '&page=1&pageSize=10'
+                    : 'page=1&pageSize=10';  // 默认查询第一页和每页10条数据
+
+                fetch(`/books/search?${queryString}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code === 200) {
+                            alert('查询成功');
+                            renderBooks(data.data);  // 渲染图书列表
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => alert('查询失败',error));
+            });
+
+            // 渲染图书列表
+            function renderBooks(books) {
+                const tableBody = document.querySelector('#borrowed-books tbody');
+                tableBody.innerHTML = '';
+                books.forEach(book => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${book.name}</td>
+                        <td>${book.borrower}</td>
+                        <td>${book.borrowTime}</td>
+                        <td>${book.returnTime}</td>
+                        <td><button class="borrow-button" onclick="borrowBook(${book.id})">借阅</button></td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // 新增图书
+            document.getElementById('addBookButton').addEventListener('click', function () {
+                const name = document.getElementById('bookName').value;
+                const author = document.getElementById('bookAuthor').value;
+                const publisher = document.getElementById('bookPublisher').value;
+                const price = document.getElementById('bookPrice').value;
+
+                fetch('/books/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, author, publisher, price })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code === 200) {
+                            alert('新增成功');
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => alert('新增失败'));
+            });
+
+            // 编辑图书
+            document.getElementById('editBookButton').addEventListener('click', function () {
+                const id = document.getElementById('editBookId').value;
+                const name = document.getElementById('editBookName').value;
+                const author = document.getElementById('editBookAuthor').value;
+                const publisher = document.getElementById('editBookPublisher').value;
+                const price = document.getElementById('editBookPrice').value;
+
+                fetch(`/books/edit/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, author, publisher, price })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code === 200) {
+                            alert('编辑成功');
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => alert('编辑失败'));
+            });
+
+            // 从 localStorage 获取用户名
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.getElementById('usernameDisplay').textContent = `用户名：${username}`;
+            } else {
+                alert('未登录，请先登录');
+                window.location.href = 'login.html'; // 未登录时跳转到登录页面
+            }
+
+            // 注销逻辑
+            document.getElementById('logoutButton').addEventListener('click', () => {
+                fetch('/users/logout', { method: 'POST' })
+                    .then(() => {
+                        localStorage.removeItem('username'); // 清除用户名
+                        window.location.href = 'login.html'; // 跳转到登录页面
+                    })
+                    .catch(error => console.error('注销失败', error));
+            });
+
+            // 借书操作
+            function borrowBook(bookId) {
+                const username = localStorage.getItem('username');  // 从本地存储中获取用户名
+                if (!username) {
+                    alert('请先登录');
+                    return;
+                }
+
+                fetch(`/books/borrow?bookId=${bookId}&username=${username}`, {
+                    method: 'POST'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code === 200) {
+                            alert(data.message);  // 显示借书成功信息
+                            location.reload();  // 刷新页面以更新图书列表
+                        } else {
+                            alert(data.message);  // 显示错误信息
+                        }
+                    })
+                    .catch(error => console.error('借书请求失败', error));
+            }
+
+            // 还书操作
+            function returnBook(bookId) {
+                fetch(`/books/return?bookId=${bookId}`, {
+                    method: 'POST'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code === 200) {
+                            alert(data.message);  // 显示还书成功信息
+                            location.reload();  // 刷新页面以更新图书列表
+                        } else {
+                            alert(data.message);  // 显示错误信息
+                        }
+                    })
+                    .catch(error => console.error('还书请求失败', error));
+            }
+        </script>
+    </body>
+</html>

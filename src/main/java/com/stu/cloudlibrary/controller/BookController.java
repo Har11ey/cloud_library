@@ -67,4 +67,41 @@ public class BookController {
             return ApiResponse.failed("图书未找到");
         }
     }
+    // 查询图书
+    @GetMapping("/search")
+    public ApiResponse<List<Book>> searchBooks(
+            @RequestParam(required = false) String name,  // 图书名称
+            @RequestParam(required = false) String author,  // 作者
+            @RequestParam(required = false) String publisher,  // 出版社
+            @RequestParam(defaultValue = "1") int page,  // 当前页，默认为1
+            @RequestParam(defaultValue = "10") int pageSize  // 每页条数，默认为10
+    ) {
+        // 计算 offset
+        int offset = (page - 1) * pageSize;
+        // 调用服务层的查询方法
+        List<Book> books = bookService.searchBooks(name, author, publisher, offset, pageSize);
+        return ApiResponse.success(books);  // 返回查询结果
+    }
+
+    // 新增图书
+    @PostMapping("/add")
+    public ApiResponse<String> addBook(@RequestBody Book book) {
+        boolean success = bookService.addBook(book);
+        if (success) {
+            return ApiResponse.success("图书新增成功");
+        } else {
+            return ApiResponse.failed("图书新增失败");
+        }
+    }
+
+    // 编辑图书
+    @PutMapping("/edit")
+    public ApiResponse<String> editBook(@RequestBody Book book) {
+        boolean success = bookService.editBook(book);
+        if (success) {
+            return ApiResponse.success("图书编辑成功");
+        } else {
+            return ApiResponse.failed("图书编辑失败");
+        }
+    }
 }

@@ -46,13 +46,104 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
+        /* 侧边栏样式 */
+        .sidebar {
+            width: 200px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #34495e;
+        }
+        /* 导航栏样式 */
+        .navbar {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .title {
+            font-size: 1.5em;
+        }
+
+        .navbar .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .user-info span {
+            margin-right: 10px;
+        }
+
+        .navbar .user-info button {
+            padding: 5px 10px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .navbar .user-info button:hover {
+            background-color: #d32f2f;
+        }
+        /* 主体内容布局 */
+        .recommendations {
+            display: flex;
+            min-height: 100vh;
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>新书推荐</h2>
-    <div id="bookList">
-        <!-- 图书列表将在这里加载 -->
+
+<!-- 导航栏 -->
+<div class="navbar">
+    <div class="title">何昊的图书借阅系统</div>
+    <div class="user-info">
+        <span id="usernameDisplay">用户名：未知</span>
+        <button id="logoutButton">注销</button>
+    </div>
+</div>
+
+<div class ="recommendations">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="recommendations.html" id="newBooksLink">新书推荐</a></li>
+            <li><a href="borrow.html">图书借阅</a></li>
+            <li><a href="current.html">当前借阅</a></li>
+            <li><a href="records.html">借阅记录</a></li>
+        </ul>
+    </div>
+
+
+    <div class="container">
+        <h2>新书推荐</h2>
+        <div id="bookList">
+            <!-- 图书列表将在这里加载 -->
+        </div>
     </div>
 </div>
 
@@ -127,6 +218,24 @@
             })
             .catch(error => console.error('还书请求失败', error));
     }
+    // 从 localStorage 获取用户名
+    const username = localStorage.getItem('username');
+    if (username) {
+        document.getElementById('usernameDisplay').textContent = `用户名：${username}`;
+    } else {
+        alert('未登录，请先登录');
+        window.location.href = 'login.html'; // 未登录时跳转到登录页面
+    }
+
+    // 注销逻辑
+    document.getElementById('logoutButton').addEventListener('click', () => {
+        fetch('/users/logout', { method: 'POST' })
+            .then(() => {
+                localStorage.removeItem('username'); // 清除用户名
+                window.location.href = 'login.html'; // 跳转到登录页面
+            })
+            .catch(error => console.error('注销失败', error));
+    });
 </script>
 
 </body>
