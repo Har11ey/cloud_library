@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>借阅记录 - 图书借阅系统</title>
+    <title>当前借阅 - 图书借阅系统</title>
     <style>
         body {
             margin: 0;
@@ -132,7 +132,7 @@
                 <th>预计归还时间</th>
             </tr>
             </thead>
-            <tbody id="recordList">
+            <tbody id="currentrecordList">
             <!-- 动态插入借阅记录 -->
             </tbody>
         </table>
@@ -149,13 +149,13 @@
         window.location.href = 'login.html'; // 未登录时跳转到登录页面
     }
 
-    // 加载所有借阅记录
+    // 加载用户名的借阅记录
     function loadBorrowRecords() {
-        fetch('record/allRecords')  // 不传递用户名，直接查询所有借阅记录
+        fetch('record/records?username=' + username)  // 传递用户名
             .then(response => response.json())
             .then(data => {
                 if (data.code === 200) {
-                    const recordList = document.getElementById('recordList');
+                    const recordList = document.getElementById('currentrecordList');
                     recordList.innerHTML = ''; // 清空原有数据
                     data.data.forEach(record => {
                         const row = document.createElement('tr');

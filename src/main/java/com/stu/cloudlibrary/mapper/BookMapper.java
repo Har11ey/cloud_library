@@ -13,12 +13,15 @@ public interface BookMapper {
     List<Book> findLatestBooks();
 
     // 借阅图书，更新图书状态和借阅信息
-    @Update("UPDATE book SET status = 'borrowed', borrower = #{borrower}, borrowtime = #{borrowTime}, returntime = #{returnTime} WHERE id = #{id} AND status = 'available'")
+    @Update("UPDATE book SET status = 'borrowed', borrower = #{borrower}, borrowTime = #{borrowTime}, returnTime = #{returnTime} WHERE id = #{id} AND status = 'available'")
     int borrowBook(@Param("id") Long id, @Param("borrower") String borrower, @Param("borrowTime") String borrowTime, @Param("returnTime") String returnTime);
 
+
+
     // 还书，更新图书状态
-    @Update("UPDATE book SET status = 'available', borrower = NULL, borrowtime = NULL, returntime = NULL WHERE id = #{id} AND status = 'borrowed'")
+    @Update("UPDATE book SET status = 'available', borrower = NULL, borrowTime = NULL, returnTime = NULL WHERE id = #{id} AND status = 'borrowed'")
     int returnBook(@Param("id") Long id);
+
 
     // 根据ID查找图书
     @Select("SELECT * FROM book WHERE id = #{id}")
