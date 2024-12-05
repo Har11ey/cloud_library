@@ -12,7 +12,7 @@ public interface RecordMapper {
         @Select("SELECT borrower, name, borrowTime, returnTime FROM book WHERE borrower = #{username}")
         List<BorrowRecord> getBorrowRecordsByUsername(@Param("username") String username);
 
-        @Select("SELECT borrower, name, borrowTime, returnTime FROM book")
+        @Select("SELECT borrower, name, borrowTime, returnTime FROM book WHERE status = 'borrowed'")
         List<BorrowRecord> getAllBorrowRecords();
 
 }
