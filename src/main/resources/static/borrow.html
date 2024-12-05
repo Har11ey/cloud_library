@@ -236,9 +236,9 @@
                         <thead>
                         <tr>
                             <th>书名</th>
-                            <th>借阅人</th>
-                            <th>借阅时间</th>
-                            <th>预计归还时间</th>
+                            <th>作者</th>
+                            <th>价格</th>
+                            <th>出版社</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -337,9 +337,9 @@
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${book.name}</td>
-                        <td>${book.borrower}</td>
-                        <td>${book.borrowTime}</td>
-                        <td>${book.returnTime}</td>
+                        <td>${book.author}</td>
+                        <td>${book.price}</td>
+                        <td>${book.publisher}</td>
                         <td><button class="borrow-button" onclick="borrowBook(${book.id})">借阅</button></td>
                     `;
                     tableBody.appendChild(row);
