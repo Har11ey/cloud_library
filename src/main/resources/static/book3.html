@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算机网络</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('images/bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .book-page-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .book-header h1 {
+            font-size: 3em;
+            font-weight: 600;
+            color: #00796b;
+            line-height: 1.2;
+        }
+
+        .book-img {
+            max-width: 280px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-details {
+            flex-grow: 1;
+            margin-left: 30px;
+        }
+
+        .book-details h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .book-details p {
+            font-size: 1.15em;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .book-details h3 {
+            font-size: 1.25em;
+            color: #333;
+            margin-top: 20px;
+            font-weight: 400;
+        }
+
+        .card-footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+            transform: scale(1.05);
+        }
+        /* 页脚样式 */
+        .footer {
+            background-color: #1f1f1f; /* 深灰色背景 */
+            color: #fff; /* 白色文字 */
+            padding: 40px 0;
+            margin-top: 50px;
+            font-family: 'Arial', sans-serif;
+            text-align: left;
+        }
+
+        .footer p {
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .footer .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer .footer-links li {
+            margin: 10px 0;
+        }
+
+        .footer .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .footer .footer-links a:hover {
+            color: #007bff; /* 蓝色悬停 */
+        }
+
+        .footer .social-links {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .footer .social-links li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        .footer .social-links a {
+            color: #fff;
+            font-size: 1.8em; /* 图标大小 */
+            transition: color 0.3s ease;
+        }
+
+        .footer .social-links a:hover {
+            color: #007bff; /* 蓝色悬停 */
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .footer .footer-links {
+                text-align: center;
+                margin-top: 20px;
+            }
+            .footer .footer-links li {
+                display: inline-block;
+                margin: 10px 15px;
+            }
+        }
+        /* 视频容器 */
+        .video-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .video-container iframe {
+            width: 100%;
+            max-width: 960px;
+            height: 540px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<!-- 书籍详情页面 -->
+<div class="book-page-container">
+    <div class="book-header">
+        <h1>计算机网络</h1>
+        <img class="book-img" src="images/book3.png" alt="计算机网络">
+    </div>
+
+    <div class="book-details">
+        <h2>书籍简介</h2>
+        <p>《计算机网络》是一本经典的计算机网络教材，深入浅出地讲解了计算机网络的基础概念、协议、体系结构等内容。</p>
+
+        <h3>作者：Andrew S. Tanenbaum</h3>
+        <h3>出版社：人民邮电出版社</h3>
+        <h3>出版年份：2016</h3>
+
+        <p>本书结合了理论与实践，从计算机网络的基础入手，逐步讲解各类网络协议和通信原理，适合计算机专业的学生和网络工程师阅读。</p>
+    </div>
+    <!-- 视频展示区域 -->
+    <div class="video-container">
+        <h2>相关视频：计算机网络介绍</h2>
+        <iframe src="video/book1.mp4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <div class="card-footer">
+        <a href="/borrow.html" class="btn btn-primary btn-lg">借阅此书</a>
+    </div>
+</div>
+<!-- 页脚 -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <!-- 版权信息 -->
+            <div class="col-md-6">
+                <p>&copy; 网安22A2何昊2022014464 图书借阅系统 - 版权所有</p>
+                <p>联系方式：2653301214@qq.com</p>
+            </div>
+
+            <!-- 快速链接 -->
+            <div class="col-md-6">
+                <ul class="footer-links">
+                    <li><a href="/index.html">返回首页</a></li>
+                    <li><a href="https://web1.wechat.com/cgi-bin/mmwebwx-bin/webwxindex?t=v2/index">联系我们</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

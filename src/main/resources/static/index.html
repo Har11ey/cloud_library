@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
     <head>
-        <!--引入Bootstrap-->
+        <!-- 引入 Bootstrap 和 AOS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+        <!-- 引入 Slick.js -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -227,9 +234,64 @@
             .book-item div {
                 color: #004d40;  /* 设置借阅按钮的文字颜色为深绿色 */
             }
+            /* 推荐图书轮播与上下内容的间距 */
+            .slick-slider {
+                margin-bottom: 40px;  /* 下方间距 */
+            }
+            /* 按钮与上方内容之间的间距 */
+            .text-center {
+                margin-top: 30px;
+                margin-bottom: 40px;
+            }
+            /* 图书卡片之间的间距 */
+            .recommendations {
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;  /* 设置卡片之间的间距 */
+                margin-bottom: 40px;
+            }
+
+            .book-card {
+                flex: 1;
+                margin-bottom: 30px;  /* 每个卡片的下方间距 */
+            }
+            /* 动态加载书籍区域的间距 */
+            #dynamic-recommendations {
+                margin-top: 40px;
+            }
+            /* 悬浮按钮样式 */
+            #toggle-music {
+                position: fixed;
+                top: 50%;
+                left: 10px;
+                transform: translateY(-50%);
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background-color: rgba(0, 0, 0, 0.5);
+                color: white;
+                font-size: 20px;
+                text-align: center;
+                line-height: 50px;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.3s;
+            }
+
+            /* 鼠标悬停时改变按钮背景色 */
+            #toggle-music:hover {
+                background-color: rgba(0, 0, 0, 0.7);
+                transform: scale(1.1);
+            }
+
+            /* 音频播放元素 */
+            audio {
+                display: none;
+            }
         </style>
     </head>
     <body>
+
     <!-- 导航栏 -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
@@ -267,8 +329,21 @@
     <!--  主体部分  -->
     <div class="container" id ="main-container">
         <!-- 首页标题 -->
-        <h1>欢迎来到图书借阅系统</h1>
-        <p class="intro-text">探索各种书籍，借阅您感兴趣的内容，开始您的阅读之旅。</p>
+        <h1 data-aos="fade-up">欢迎来到图书借阅系统</h1>
+        <p class="intro-text" data-aos="fade-up" data-aos-delay="500">探索各种书籍，借阅您感兴趣的内容，开始您的阅读之旅。</p>
+        <!-- 自动播放并隐藏的背景音乐 -->
+        <audio id="background-music" autoplay loop>
+            <source src="video/Shing02%20(安念真吾)Pt_2.mp3" type="audio/mpeg">
+            您的浏览器不支持音频元素。
+        </audio>
+
+        <!-- 音乐控制按钮 -->
+        <button id="toggle-music">⏸️</button>
+        <!-- 推荐图书轮播 -->
+        <div class="slick-slider">
+            <div><img src="images/book8.jpg" alt="bg3"></div>
+            <div><img src="images/book9.jpg" alt="bg4"></div>
+        </div>
 
         <!-- 开始借阅按钮 -->
         <div class="text-center">
@@ -308,6 +383,9 @@
                 </div>
             </div>
         </div>
+        <!-- 动态加载的推荐书籍 -->
+        <div id="dynamic-recommendations" ></div>
+
     </div>
     <!-- 侧边栏：书架形状 -->
     <div class="sidebar">
@@ -377,7 +455,53 @@
                     })
                     .catch(error => console.error('注销失败', error));
             });
+            // 初始化 AOS
+            AOS.init();
 
+            // 初始化 Slick.js 轮播
+            $(document).ready(function(){
+                $('.slick-slider').slick({
+                    infinite: true,
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    autoplay: true,
+                    autoplaySpeed: 2000
+                });
+            });
+            // 动态加载书籍信息
+            const recommendations = [
+                { id: 1, title: "读书点燃智慧", description: "读书，如同点燃心中的火种，点亮了通向智慧的道路。每本书都是一盏明灯，照亮了我们内心的黑暗角落，让我们看见更广阔的天地。当文字在眼前跳动时，仿佛每一行字都在向我们传递着无尽的力量。书籍不仅仅是知识的载体，它们还承载着前人智慧的结晶，激发我们思考的热情，引导我们走向更高的境界。通过读书，我们能够穿越时空的阻隔，感知历史的脉搏，领略不同文化的美丽，获得解决问题的钥匙。每一本书，都是一颗智慧的种子，它悄然种在我们心田，随着时间的流逝，渐渐生根发芽，最终绽放出理性与思维的花朵。", image: "images/book4.jpg" },
+                { id: 2, title: "读书是人生头等大事", description: "读书，是人生的头等大事。它不仅是获取知识的途径，更是塑造思想、提升自我、追求卓越的重要方式。在人生的长河中，书籍是我们最忠实的伴侣，指引我们走向更广阔的天地。书本中的每一页，都蕴藏着智慧的火花，激发我们的想象力与创造力。通过阅读，我们能够不断超越自我，拓宽视野，丰富内心的世界。它让我们在面对困境时拥有更多的解决方案，在迷茫时给予我们方向，在成功时保持清醒。无论是经典的文学作品，还是专业的学术著作，每一本书都在帮助我们更好地理解世界，理解他人，理解自己。读书不仅仅是为了知识，更是为了思考和领悟。它培养了我们的耐性与专注力，也激励我们不断追求真理与美好。正是通过这份不懈的学习与思索，我们才能在复杂的世界中找到自己的立足点，成就一个更有深度和广度的人生。因此，读书不仅是一种选择，更是一种责任，它决定着我们生命的高度与宽度。可以说，读书是人生最为宝贵的投资，它将不断回报我们以智慧和成就。\n", image: "images/book5.jpg" },
+                { id: 3, title: "跟着书本去旅行", description: "跟随书本的指引，我踏上了一段充满知识与奇遇的旅行。每一页翻开，仿佛打开了一扇窗，让我看到了一个全新的世界。书中的文字如同温柔的风，带我穿越时空，走过历史的长河，探索未知的领域。在这趟旅行中，我不仅遇见了不同的文化和思想，也体验了每一个人物的喜怒哀乐。每一次阅读，都是一次心灵的旅行，让我在书的世界里不断成长，收获智慧与灵感。而这段旅行，似乎永无止境，书本的每个章节都像是一站又一站的目的地，等待我去探索、去发现。", image: "images/book6.jpg" },
+            ];
+
+            // 动态渲染书籍推荐
+            const recommendationsContainer = document.getElementById('dynamic-recommendations');
+            recommendations.forEach(book => {
+                const bookCard = `
+                    <div class="book-card">
+                        <img src="${book.image}" alt="${book.title}">
+                        <div class="card-body">
+                            <h5 class="card-title">${book.title}</h5>
+                            <p class="card-text">${book.description}</p>
+                        </div>
+                    </div>
+                `;
+                recommendationsContainer.innerHTML += bookCard;
+            });
+            // 音乐
+            const audio = document.getElementById("background-music");
+            const toggleButton = document.getElementById("toggle-music");
+
+            toggleButton.addEventListener("click", function() {
+                if (audio.paused) {
+                    audio.play();
+                    toggleButton.textContent = "⏸️";  // 暂停按钮显示
+                } else {
+                    audio.pause();
+                    toggleButton.textContent = "▶️";  // 播放按钮显示
+                }
+            });
         </script>
     </body>
 </html>

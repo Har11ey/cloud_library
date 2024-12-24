@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>关于我 - 何昊的大作业</title>
-    <!-- 引入Bootstrap -->
+    <!-- 引入 Bootstrap 和 AOS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 
     <style>
         html, body {
@@ -48,6 +50,9 @@
             font-size: 1.2em;
             line-height: 1.6;
         }
+        #footer{
+            color: #fff;
+        }
 
         /* 页脚样式 */
         .footer {
@@ -73,19 +78,22 @@
 
 <!-- 主要内容 -->
 <div class="container">
-    <h1>关于我</h1>
+    <h1 data-aos="fade-up">关于我</h1>
     <div class="content">
-        <p>谢谢观看，这是何昊的大作业。</p>
-        <p>在这里，你可以了解我的项目、作品以及我的一些想法。</p>
-        <p>感谢大家的支持与关注，希望这份作品能够带给你们一些启发。</p>
+        <p class="intro-text" data-aos="fade-up" data-aos-delay="500">谢谢观看，这是何昊的大作业。</p>
+        <p class="intro-text" data-aos="fade-up" data-aos-delay="700">在这里，你可以了解我的项目、作品以及我的一些想法。</p>
+        <p class="intro-text" data-aos="fade-up" data-aos-delay="900">感谢大家的支持与关注，希望这份作品能够带给你们一些启发。</p>
     </div>
 </div>
 
 <!-- 页脚 -->
 <footer class="footer">
-    <p>&copy; 网安22A2 何昊 2022014464 - 版权所有</p>
+    <p id="footer">&copy; 网安22A2 何昊 2022014464 - 版权所有</p>
     <p><a href="/index.html">返回首页</a></p>
 </footer>
-
+<script>
+    // 初始化 AOS
+    AOS.init();
+</script>
 </body>
 </html>
