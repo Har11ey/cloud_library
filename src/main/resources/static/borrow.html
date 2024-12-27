@@ -4,12 +4,29 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>图书借阅 - 图书借阅系统</title>
-        <!--引入Bootstrap-->
+        <!-- 引入 Bootstrap 和 AOS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 
         <style>
+            /* 确保折叠按钮是正确大小 */
+            .navbar-toggler {
+                border: none;
+                padding: 0.25rem 0.75rem;  /* 适当缩小按钮的大小 */
+                font-size: 1.25rem;  /* 调整字体大小 */
+                line-height: 1;
+                background-color: transparent;
+            }
+            @media (max-width: 768px) {
+                .navbar-toggler {
+                    font-size: 1.1rem;
+                    padding: 0.25rem 0.75rem;
+                }
+            }
+
             /* 设置导航栏背景图 */
             .navbar {
                 background-image: url('images/navbarbg1.jpg');
@@ -223,41 +240,47 @@
     </head>
 
     <body>
-        <!-- 导航栏 -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container">
-                <!-- Logo -->
-                <a class="navbar-brand" href="#"><img src="images/logo.png" style="height: 30px" alt="logo"></a>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand" href="#"><img src="images/logo.png" style="height: 30px" alt="logo"></a>
 
-                <!-- 导航菜单 -->
-                <div class="collapse navbar-collapse" id="navbarcollapse">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/index.html">首页</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">图书借阅系统</a>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <li><a href="/recommendations.html" class="dropdown-item">新书推荐</a></li>
-                                <li><a href="/borrow.html" class="dropdown-item">图书借阅</a></li>
-                                <li><a href="/current.html" class="dropdown-item">当前借阅</a></li>
-                                <li><a href="/records.html" class="dropdown-item">借阅记录</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/about.html">关于我</a>
-                        </li>
-                    </ul>
+            <!-- 响应式折叠按钮 -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                    <!-- 用户信息和注销按钮 -->
-                    <div class="d-flex justify-content-end align-items-center">
-                        <span id="usernameDisplay" class="text-dark mr-3" style="white-space: nowrap;">用户名：未知</span>
-                        <button id="logoutButton" class="btn btn-danger btn-sm" style="background-color: #f8d7da; color: #721c24; border: none;">注销</button>
-                    </div>
+            <!-- 导航菜单 -->
+            <div class="collapse navbar-collapse" id="navbarcollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/index.html">首页</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">图书借阅系统</a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a href="/recommendations.html" class="dropdown-item">新书推荐</a></li>
+                            <li><a href="/borrow.html" class="dropdown-item">图书借阅</a></li>
+                            <li><a href="/current.html" class="dropdown-item">当前借阅</a></li>
+                            <li><a href="/records.html" class="dropdown-item">借阅记录</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about.html">关于我</a>
+                    </li>
+                </ul>
+
+                <!-- 用户信息和注销按钮 -->
+                <div class="d-flex justify-content-end align-items-center">
+                    <span id="usernameDisplay" class="text-dark mr-3" style="white-space: nowrap;">用户名：未知</span>
+                    <button id="logoutButton" class="btn btn-danger btn-sm" style="background-color: #f8d7da; color: #721c24; border: none;">注销</button>
                 </div>
             </div>
-        </nav>
-        <!--主体部分-->
+        </div>
+    </nav>
+
+    <!--主体部分-->
         <div class="borrow">
             <!-- 借阅图书功能 -->
             <div id="main-container" class="container">
